@@ -1,13 +1,13 @@
 data "opentelekomcloud_identity_project_v3" "current" {}
 
 # Only one Cloud Tracing Service can be used inside a otc tenant
-module "cloud_tracing_service" {
-  providers    = { opentelekomcloud = opentelekomcloud.top_level_project }
-  source       = "iits-consulting/project-factory/opentelekomcloud//modules/cloud_tracing_service"
-  version      = "4.0.1"
-  bucket_name  = replace(lower("${data.opentelekomcloud_identity_project_v3.current.name}-${var.context}-${var.stage}-cts"), "_", "-")
-  project_name = data.opentelekomcloud_identity_project_v3.current.name
-}
+#module "cloud_tracing_service" {
+#  providers    = { opentelekomcloud = opentelekomcloud.top_level_project }
+#  source       = "iits-consulting/project-factory/opentelekomcloud//modules/cloud_tracing_service"
+#  version      = "4.0.1"
+#  bucket_name  = replace(lower("${data.opentelekomcloud_identity_project_v3.current.name}-${var.context}-${var.stage}-cts"), "_", "-")
+#  project_name = data.opentelekomcloud_identity_project_v3.current.name
+#}
 
 module "vpc" {
   source     = "iits-consulting/project-factory/opentelekomcloud//modules/vpc"
@@ -21,14 +21,15 @@ module "vpc" {
 }
 
 module "cce" {
-  source  = "iits-consulting/project-factory/opentelekomcloud//modules/cce"
+  source  = "registry.terraform.io/iits-consulting/project-factory/opentelekomcloud//modules/cce"
   version = "4.0.1"
   name    = "${var.context}-${var.stage}"
 
   cluster_config = {
     vpc_id            = module.vpc.vpc.id
     subnet_id         = values(module.vpc.subnets)[0].id
-    cluster_version   = "v1.21"
+    cluster_version   = "v1.19"
+
     high_availability = var.cluster_config.high_availability
     enable_scaling    = var.cluster_config.enable_scaling
   }

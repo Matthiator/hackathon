@@ -57,3 +57,5 @@ telekom-cloud/charts/elk/charts/*.tgz
 **/charts/**/Chart.lock
 **/Chart.lock
 **/charts/*.tgz
+
+set-env.sh
